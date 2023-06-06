@@ -1,5 +1,8 @@
 <% @events.each do |event| %>
   <section class="event">
+    <div class="image">
+    <%= main_image(event) %>
+    </div>
     <div class="summary">
       <h2><%= link_to event.name, event %></h2>
       <h3><%= day_and_time(event) %> in <%= event.location %></h3>
@@ -10,5 +13,10 @@
         <%= truncate(event.description, length: 35, separator: ' ') %>
       </p>
     </div>
+  </section>
+<% end %>
+<% if current_user_admin? %>
+  <section class="admin">
+  <%= link_to "Add New Event", new_event_path, class: "button" %>
   </section>
 <% end %>
