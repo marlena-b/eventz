@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Event < ApplicationRecord
   before_save :set_slug
 
@@ -17,10 +19,10 @@ class Event < ApplicationRecord
 
   validate :acceptable_image
 
-  scope :past, -> { where("starts_at < ?", Time.now).order("starts_at") }
-  scope :upcoming, -> { where("starts_at > ?", Time.now).order("starts_at desc") }
+  scope :past, -> { where('starts_at < ?', Time.zone.now).order('starts_at') }
+  scope :upcoming, -> { where('starts_at > ?', Time.zone.now).order('starts_at desc') }
   scope :free, -> { where(price: 0.0).order(:name) }
-  scope :recent, ->(max=3) { past.limit(max) }
+  scope :recent, ->(max = 3) { past.limit(max) }
 
   def free?
     price.blank? || price.zero?
@@ -39,14 +41,12 @@ class Event < ApplicationRecord
   def acceptable_image
     return unless main_image.attached?
 
-    unless main_image.blob.byte_size <= 1.megabyte
-      errors.add(:main_image, "is too big")
-    end
+    errors.add(:main_image, 'is too big') unless main_image.blob.byte_size <= 1.megabyte
 
-    acceptable_types = ["image/jpeg", "image/png"]
-    unless acceptable_types.include?(main_image.content_type)
-      errors.add(:main_image, "must be a JPEG or PNG")
-    end
+    acceptable_types = ['image/jpeg', 'image/png']
+    return if acceptable_types.include?(main_image.content_type)
+
+    errors.add(:main_image, 'must be a JPEG or PNG')
   end
 
   def set_slug

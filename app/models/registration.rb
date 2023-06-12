@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Registration < ApplicationRecord
   belongs_to :event
   belongs_to :user
@@ -9,7 +11,7 @@ class Registration < ApplicationRecord
     'Web Search',
     'Friend/Coworker',
     'Other'
-  ]
+  ].freeze
 
   validates :how_heard,
             inclusion: { in: HOW_HEARD_OPTIONS }

@@ -44,7 +44,7 @@
       <h4>Categories</h4>
       <ul>
         <% @categories.each do |c| %>
-          <li><%= c.name %> </li>
+          <li><%= link_to c.name, c %> </li>
         <% end %>
       </ul>
     <% end %>
